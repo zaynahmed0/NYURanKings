@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Professor Voting System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="vote-section">
+    <h1>Vote for Your Favorite and Least Favorite Professor</h1>
+    <form id="voteForm">
+        <div>
+            <label for="favoriteProfessor">Favorite Professor:</label>
+            <select id="favoriteProfessor" name="favoriteProfessor">
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+        <div>
+            <label for="leastFavoriteProfessor">Least Favorite Professor:</label>
+            <select id="leastFavoriteProfessor" name="leastFavoriteProfessor">
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+        <button type="submit">Submit Vote</button>
+    </form>
+</div>
+
+<div id="leaderboard-section">
+    <h2>Leaderboard</h2>
+    <!-- Leaderboard will be populated by JavaScript -->
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
