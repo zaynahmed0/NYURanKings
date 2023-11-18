@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University Professor Voting System</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Head content -->
 </head>
 <body>
-<section id="vote-section">
-    <h1>Vote for Your Favorite and Least Favorite Professor</h1>
-    <form id="voteForm">
-        <div>
-            <label for="favoriteProfessor">Favorite Professor:</label>
-            <select id="favoriteProfessor" name="favoriteProfessor" aria-label="Favorite Professor">
-                <!-- Options will be populated by JavaScript -->
-            </select>
-        </div>
-        <div>
-            <label for="leastFavoriteProfessor">Least Favorite Professor:</label>
-            <select id="leastFavoriteProfessor" name="leastFavoriteProfessor" aria-label="Least Favorite Professor">
-                <!-- Options will be populated by JavaScript -->
-            </select>
-        </div>
-        <button type="submit">Submit Vote</button>
-    </form>
-</section>
 
+<!-- Registration Form -->
+<form id="register-form" action="/register" method="post">
+    <input type="text" id="username" name="username" placeholder="Username" required>
+    <input type="password" id="password" name="password" placeholder="Password" required>
+    <button type="submit">Register</button>
+</form>
+
+<!-- Login Form -->
+<form id="login-form" action="/login" method="post">
+    <input type="text" id="loginUsername" name="username" placeholder="Username" required>
+    <input type="password" id="loginPassword" name="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+</form>
+
+<!-- Voting Form -->
+<form id="vote-form" action="/api/submitVote" method="post">
+    <select id="favoriteProfessor" name="favoriteProfessor" aria-label="Select your favorite professor" required>
+        <!-- Populated by fetchProfessors -->
+    </select>
+    <select id="leastFavoriteProfessor" name="leastFavoriteProfessor" aria-label="Select your least favorite professor" required>
+        <!-- Populated by fetchProfessors -->
+    </select>
+    <button type="submit">Vote</button>
+</form>
+
+<!-- Leaderboard Section -->
 <section id="leaderboard-section">
-    <h2>Leaderboard</h2>
-    <!-- Leaderboard will be populated and updated by JavaScript -->
+    <!-- Leaderboard data populated by updateLeaderboard -->
 </section>
 
 <script src="app.js"></script>
