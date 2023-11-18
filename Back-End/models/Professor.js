@@ -6,14 +6,13 @@ const professorSchema = new mongoose.Schema({
     negativeVotes: { type: Number, default: 0 }
 });
 
-// Add methods for vote updating
-professorSchema.methods.incrementPositiveVotes = function() {
-    this.positiveVotes += 1;
-    return this.save();
-};
-
-professorSchema.methods.incrementNegativeVotes = function() {
-    this.negativeVotes += 1;
+// Combined method for vote updating
+professorSchema.methods.incrementVotes = function(isPositiveVote) {
+    if (isPositiveVote) {
+        this.positiveVotes += 1;
+    } else {
+        this.negativeVotes += 1;
+    }
     return this.save();
 };
 
@@ -31,4 +30,4 @@ professorSchema.statics.getLeaderboard = function() {
 };
 
 module.exports = mongoose.model('Professor', professorSchema);
-// Path: Back-End/models/Review.js
+// Path: Back-End/models/Professor.js

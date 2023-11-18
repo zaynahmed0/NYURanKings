@@ -6,11 +6,16 @@ const voteSchema = new mongoose.Schema({
     leastFavoriteProfessor: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor', required: true }
 });
 
-// Static method to calculate vote results for a professor
+// Enhanced static method with error handling for vote calculation
 voteSchema.statics.calculateVotes = async function(professorId) {
-    const positiveVotesCount = await this.countDocuments({ favoriteProfessor: professorId });
-    const negativeVotesCount = await this.countDocuments({ leastFavoriteProfessor: professorId });
-    return { positiveVotesCount, negativeVotesCount };
+    try {
+        const positiveVotesCount = await this.countDocuments({ favoriteProfessor: professorId });
+        const negativeVotesCount = await this.countDocuments({ leastFavoriteProfessor: professorId });
+        return { positiveVotesCount, negativeVotesCount };
+    } catch (error) {
+        console.error('Error calculating votes for professor:', error);
+        throw error;
+    }
 };
 
 module.exports = mongoose.model('Vote', voteSchema);
