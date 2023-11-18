@@ -11,24 +11,25 @@ const app = express();
 // Database connection (replace with your MongoDB URI)
 mongoose.connect('mongodb://localhost:27017/nyuVoting', { useNewUrlParser: true, useUnifiedTopology: true });
 
-// Middleware
+// Middleware setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ secret: 'nyu secret', resave: false, saveUninitialized: true }));
 app.use(express.static('public'));
 
-// Registration Route
+// User registration route
 app.post('/register', async (req, res) => {
     try {
         const newUser = new User(req.body);
         await newUser.save();
         res.status(201).send('User registered successfully');
     } catch (error) {
+        console.error('Registration error:', error);
         res.status(400).send('Error in registration');
     }
 });
 
-// Login Route
+// User login route
 app.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ username: req.body.username });
@@ -39,11 +40,12 @@ app.post('/login', async (req, res) => {
             res.status(401).send('Invalid credentials');
         }
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).send('Error in login');
     }
 });
 
-// Submit Vote Route
+// Vote submission route
 app.post('/api/submitVote', async (req, res) => {
     if (req.session.user) {
         try {
@@ -51,6 +53,7 @@ app.post('/api/submitVote', async (req, res) => {
             await newVote.save();
             res.status(201).send('Vote submitted successfully');
         } catch (error) {
+            console.error('Vote submission error:', error);
             res.status(400).send('Error in submitting vote');
         }
     } else {
@@ -58,7 +61,7 @@ app.post('/api/submitVote', async (req, res) => {
     }
 });
 
-// Leaderboard Route
+// Leaderboard retrieval route
 app.get('/api/leaderboard', async (req, res) => {
     try {
         const votes = await Vote.aggregate([
@@ -68,13 +71,15 @@ app.get('/api/leaderboard', async (req, res) => {
         ]);
         res.json(votes);
     } catch (error) {
+        console.error('Leaderboard retrieval error:', error);
         res.status(500).send('Error retrieving leaderboard');
     }
 });
 
-// Start the server
+// Starting the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-// Path: Front-end/app.js
+
+// Path: Front-end/models/User.js
