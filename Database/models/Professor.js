@@ -11,3 +11,4 @@ module.exports = mongoose.model('Professor', professorSchema);
 // In User.js and Professor.js
 schema.index({ email: 1 }); // For User.js
 schema.index({ name: 1 }); // For Professor.js
+//path: Back-End/models/Professor.js

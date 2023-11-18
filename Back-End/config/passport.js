@@ -6,3 +6,4 @@ module.exports = function(passport) {
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
 };
+// path: Back-End/config/passport.js

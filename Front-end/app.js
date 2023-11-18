@@ -1,7 +1,13 @@
-document.addEventListener('DOMContentLoaded', function () {
-    populateProfessors();
-    document.getElementById('voteForm').addEventListener('submit', submitVote);
+// app.js
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/professors')
+        .then(response => response.json())
+        .then(professors => {
+            // Update the UI with professor data
+        })
+        .catch(error => console.error('Error fetching professor data:', error));
 });
+
 
 function populateProfessors() {
     // Fetch professor list from the server
@@ -26,24 +32,18 @@ function populateProfessors() {
         .catch(error => console.error('Error fetching professors:', error));
 }
 
-function submitVote(event) {
-    event.preventDefault();
-
-    const favorite = document.getElementById('favoriteProfessor').value;
-    const leastFavorite = document.getElementById('leastFavoriteProfessor').value;
-
-    // Post these values to your server
-    fetch('/api/submitVote', {
+// app.js
+function submitVote(professorId, voteType) {
+    fetch('/api/vote', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ favorite, leastFavorite }),
+        body: JSON.stringify({ professorId, voteType })
     })
         .then(response => response.json())
         .then(data => {
             console.log('Vote submitted:', data);
-            updateLeaderboard();
         })
         .catch(error => console.error('Error submitting vote:', error));
 }
@@ -99,3 +99,4 @@ async function updateLeaderboard() {
         console.error('Leaderboard update error:', error);
     }
 }
+//path: Front-end/app.js

@@ -7,3 +7,4 @@ const ProfessorSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Professor', ProfessorSchema);
+//path: Back-End/models/Professor.js

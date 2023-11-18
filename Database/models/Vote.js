@@ -7,3 +7,4 @@ const voteSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Vote', voteSchema);
+//Path: Back-End/models/Vote.js
