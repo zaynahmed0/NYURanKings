@@ -1,76 +1,28 @@
-// app.js
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('/api/professors')
-        .then(response => response.json())
-        .then(professors => {
-            // Update the UI with professor data
-        })
-        .catch(error => console.error('Error fetching professor data:', error));
+    fetchProfessors();
 });
-
-
-function populateProfessors() {
-    // Fetch professor list from the server
-    fetch('/api/professors')
-        .then(response => response.json())
-        .then(professors => {
-            const favoriteSelect = document.getElementById('favoriteProfessor');
-            const leastFavoriteSelect = document.getElementById('leastFavoriteProfessor');
-
-            professors.forEach(prof => {
-                const option1 = document.createElement('option');
-                option1.value = prof.id; // Assuming each professor has a unique id
-                option1.textContent = prof.name;
-                favoriteSelect.appendChild(option1);
-
-                const option2 = document.createElement('option');
-                option2.value = prof.id;
-                option2.textContent = prof.name;
-                leastFavoriteSelect.appendChild(option2);
-            });
-        })
-        .catch(error => console.error('Error fetching professors:', error));
-}
-
-// app.js
-function submitVote(professorId, voteType) {
-    fetch('/api/vote', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ professorId, voteType })
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Vote submitted:', data);
-        })
-        .catch(error => console.error('Error submitting vote:', error));
-}
-
-function updateLeaderboard() {
-    // Fetch updated leaderboard from the server and display it
-    fetch('/api/leaderboard')
-        .then(response => response.json())
-        .then(leaderboard => {
-            console.log('Leaderboard updated:', leaderboard);
-            // Update the leaderboard display logic here
-        })
-        .catch(error => console.error('Error updating leaderboard:', error));
-}
 
 async function fetchProfessors() {
     try {
         const response = await fetch('/api/professors');
         if (!response.ok) throw new Error('Network response was not ok');
         const professors = await response.json();
-        // Code to update the UI with this data
+
+        const favoriteSelect = document.getElementById('favoriteProfessor');
+        const leastFavoriteSelect = document.getElementById('leastFavoriteProfessor');
+
+        professors.forEach(prof => {
+            const option = document.createElement('option');
+            option.value = prof.id;
+            option.textContent = prof.name;
+            favoriteSelect.appendChild(option.cloneNode(true)); // Clone for the second dropdown
+            leastFavoriteSelect.appendChild(option);
+        });
     } catch (error) {
         console.error('Fetch error:', error);
+        // Update UI to show error message
     }
 }
-
-window.onload = fetchProfessors; // Call this when the page loads
 
 async function submitVote(voteData) {
     try {
@@ -85,10 +37,10 @@ async function submitVote(voteData) {
         // Handle response, update UI accordingly
     } catch (error) {
         console.error('Vote submission error:', error);
+        // Update UI to show error message
     }
 }
 
-// Attach this function to your voting form's onsubmit event
 async function updateLeaderboard() {
     try {
         const response = await fetch('/api/leaderboard');
@@ -97,6 +49,16 @@ async function updateLeaderboard() {
         // Code to update the leaderboard UI
     } catch (error) {
         console.error('Leaderboard update error:', error);
+        // Update UI to show error message
     }
 }
-//path: Front-end/app.js
+
+// Attach event listener to the voting form
+document.getElementById('voteForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+    submitVote({
+        favoriteProfessor: formData.get('favoriteProfessor'),
+        leastFavoriteProfessor: formData.get('leastFavoriteProfessor')
+    });
+});

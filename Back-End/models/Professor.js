@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
-const ProfessorSchema = new mongoose.Schema({
-    name: String,
-    positiveVotes: { type: Number, default: 0 },
-    negativeVotes: { type: Number, default: 0 }
+const professorSchema = new mongoose.Schema({
+    name: { type: String, required: true, unique: true, trim: true },
+    positiveVotes: { type: Number, default: 0, min: 0 },
+    negativeVotes: { type: Number, default: 0, min: 0 }
 });
 
-module.exports = mongoose.model('Professor', ProfessorSchema);
-//path: Back-End/models/Professor.js
+// Indexing the name field for efficient queries
+professorSchema.index({ name: 1 });
+
+module.exports = mongoose.model('Professor', professorSchema);

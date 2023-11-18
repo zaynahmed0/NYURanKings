@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
-const UserSchema = new mongoose.Schema({
-    email: String,
+const userSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        unique: true,
+        required: true,
+        match: [/.+\@.+\..+/, 'Please fill a valid email address'] // Email validation
+    },
     voted: { type: Boolean, default: false }
 });
 
-UserSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
+userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
 
-module.exports = mongoose.model('User', UserSchema);
-//path : Back-End/models/User.js
+// Indexing the email field
+userSchema.index({ email: 1 });
+
+module.exports = mongoose.model('User', userSchema);

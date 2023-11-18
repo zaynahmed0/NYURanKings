@@ -7,31 +7,30 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="vote-section">
+<section id="vote-section">
     <h1>Vote for Your Favorite and Least Favorite Professor</h1>
     <form id="voteForm">
         <div>
             <label for="favoriteProfessor">Favorite Professor:</label>
-            <select id="favoriteProfessor" name="favoriteProfessor">
+            <select id="favoriteProfessor" name="favoriteProfessor" aria-label="Favorite Professor">
                 <!-- Options will be populated by JavaScript -->
             </select>
         </div>
         <div>
             <label for="leastFavoriteProfessor">Least Favorite Professor:</label>
-            <select id="leastFavoriteProfessor" name="leastFavoriteProfessor">
+            <select id="leastFavoriteProfessor" name="leastFavoriteProfessor" aria-label="Least Favorite Professor">
                 <!-- Options will be populated by JavaScript -->
             </select>
         </div>
         <button type="submit">Submit Vote</button>
     </form>
-</div>
+</section>
 
-<div id="leaderboard-section">
+<section id="leaderboard-section">
     <h2>Leaderboard</h2>
     <!-- Leaderboard will be populated and updated by JavaScript -->
-</div>
+</section>
 
 <script src="app.js"></script>
 </body>
 </html>
-<!-- Path: Front-end/index.html -->
