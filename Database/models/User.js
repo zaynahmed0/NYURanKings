@@ -9,3 +9,6 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
 
 module.exports = mongoose.model('User', userSchema);
+// In User.js and Professor.js
+schema.index({ email: 1 }); // For User.js
+schema.index({ name: 1 }); // For Professor.js

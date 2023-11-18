@@ -1,27 +1,44 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const session = require('express-session');
 const passport = require('passport');
-const User = require('./models/User');
-const Professor = require('./models/Professor');
-const Vote = require('./models/Vote');
+require('./models/User');
+require('./models/Professor');
+require('./models/Vote');
 require('./config/passport')(passport);
-
-mongoose.connect('mongodb://localhost/university_voting', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
+// Middlewares for body parsing, authentication, etc.
+app.use(express.json());
 app.use(passport.initialize());
-app.use(passport.session());
 
-// Authentication Routes...
-// Voting Routes...
-// Leaderboard Route...
-
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
+// User registration route
+app.post('/register', (req, res) => {
+    // Registration logic here
 });
+
+// User login route
+app.post('/login', (req, res) => {
+    // Login logic here
+});
+
+// Submit vote route
+app.post('/api/submitVote', passport.authenticate('jwt', { session: false }), (req, res) => {
+    // Vote submission logic here
+});
+
+// Fetch leaderboard route
+app.get('/api/leaderboard', (req, res) => {
+    // Leaderboard fetching logic here
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
