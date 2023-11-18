@@ -31,3 +31,4 @@ professorSchema.statics.getLeaderboard = function() {
 };
 
 module.exports = mongoose.model('Professor', professorSchema);
+// Path: Back-End/models/Review.js

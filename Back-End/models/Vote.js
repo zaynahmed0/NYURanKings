@@ -14,3 +14,4 @@ voteSchema.statics.calculateVotes = async function(professorId) {
 };
 
 module.exports = mongoose.model('Vote', voteSchema);
+// Path: Back-End/models/Vote.js

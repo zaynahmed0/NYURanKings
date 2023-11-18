@@ -16,3 +16,5 @@ userSchema.methods.markVoted = function() {
 };
 
 module.exports = mongoose.model('User', userSchema);
+
+// Path: Back-End/models/User.js
