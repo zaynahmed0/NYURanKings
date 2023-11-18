@@ -17,9 +17,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ secret: 'nyu secret', resave: false, saveUninitialized: true }));
 app.use(express.static('public'));
 
-// User registration route
+// User registration route with NYU email validation
 app.post('/register', async (req, res) => {
     try {
+        // Validate NYU email address
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@nyu\.edu$/;
+        if (!emailRegex.test(req.body.email)) {
+            return res.status(400).send('Invalid email address. Please use your NYU email.');
+        }
+
         const newUser = new User(req.body);
         await newUser.save();
         res.status(201).send('User registered successfully');
@@ -49,6 +55,13 @@ app.post('/login', async (req, res) => {
 app.post('/api/submitVote', async (req, res) => {
     if (req.session.user) {
         try {
+            // Check if the user has already voted
+            const existingVote = await Vote.findOne({ userId: req.session.user._id });
+            if (existingVote) {
+                return res.status(403).send('You have already voted');
+            }
+
+            // Save new vote
             const newVote = new Vote({ userId: req.session.user._id, ...req.body });
             await newVote.save();
             res.status(201).send('Vote submitted successfully');
@@ -61,15 +74,53 @@ app.post('/api/submitVote', async (req, res) => {
     }
 });
 
+app.get('/api/professors', async (req, res) => {
+    try {
+        const professors = await Professor.find({});
+        res.json(professors);
+    } catch (error) {
+        console.error('Fetch professors error:', error);
+        res.status(500).send('Error fetching professors');
+    }
+});
+
 // Leaderboard retrieval route
 app.get('/api/leaderboard', async (req, res) => {
     try {
-        const votes = await Vote.aggregate([
-            { $group: { _id: "$professorId", count: { $sum: 1 } } },
-            { $sort: { count: -1 } },
-            { $limit: 10 }
+        // Good Teachers Leaderboard
+        const goodTeachers = await Vote.aggregate([
+            { $match: { voteType: 'good' } },
+            { $group: { _id: '$professorId', goodVotes: { $sum: 1 } } },
+            { $sort: { goodVotes: -1 } }
         ]);
-        res.json(votes);
+
+        // Bad Teachers Leaderboard
+        const badTeachers = await Vote.aggregate([
+            { $match: { voteType: 'bad' } },
+            { $group: { _id: '$professorId', badVotes: { $sum: 1 } } },
+            { $sort: { badVotes: -1 } }
+        ]);
+
+        // Best to Worst Ratio Leaderboard
+        const ratioLeaderboard = await Vote.aggregate([
+            { $group: {
+                    _id: '$professorId',
+                    goodVotes: {
+                        $sum: { $cond: [{ $eq: ['$voteType', 'good'] }, 1, 0] }
+                    },
+                    badVotes: {
+                        $sum: { $cond: [{ $eq: ['$voteType', 'bad'] }, 1, 0] }
+                    }
+                }},
+            { $addFields: {
+                    ratio: {
+                        $cond: [{ $eq: ['$badVotes', 0] }, '$goodVotes', { $divide: ['$goodVotes', '$badVotes'] }]
+                    }
+                }},
+            { $sort: { ratio: -1 } }
+        ]);
+
+        res.json({ goodTeachers, badTeachers, ratioLeaderboard });
     } catch (error) {
         console.error('Leaderboard retrieval error:', error);
         res.status(500).send('Error retrieving leaderboard');
@@ -82,4 +133,4 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-// Path: Front-end/models/User.js
+// Path: Front-end/app.js

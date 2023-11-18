@@ -55,6 +55,8 @@
             e.preventDefault();
             $.post('/login', $(this).serialize(), function(response) {
                 alert('Login successful');
+                fetchProfessors(); // Fetch professors after successful login
+                updateLeaderboard(); // Update leaderboard after successful login
             }).fail(function() {
                 alert('Login failed');
             });
@@ -65,13 +67,38 @@
             e.preventDefault();
             $.post('/api/submitVote', $(this).serialize(), function(response) {
                 alert('Vote submitted successfully');
+                updateLeaderboard(); // Update leaderboard after voting
             }).fail(function() {
                 alert('Vote submission failed');
             });
         });
 
-        // Additional functions to fetch and display professors and leaderboard can be added here
+        // Fetch professors for voting
+        function fetchProfessors() {
+            $.get('/api/professors', function(professors) {
+                $('#favoriteProfessor').empty();
+                $('#leastFavoriteProfessor').empty();
+                professors.forEach(function(professor) {
+                    $('#favoriteProfessor').append($('<option>', {
+                        value: professor._id,
+                        text: professor.name
+                    }));
+                    $('#leastFavoriteProfessor').append($('<option>', {
+                        value: professor._id,
+                        text: professor.name
+                    }));
+                });
+            });
+        }
+
+        // Update leaderboard display
+        function updateLeaderboard() {
+            $.get('/api/leaderboard', function(data) {
+                // Implement leaderboard update logic here
+            });
+        }
     });
 </script>
 </body>
 </html>
+<!-- Path: Front-end/index.html -->
