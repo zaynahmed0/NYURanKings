@@ -13,3 +13,4 @@ UserSchema.pre('save', async function(next) {
 });
 
 module.exports = mongoose.model('User', UserSchema);
+// Path: V2/Back-end/Models/User.js
